@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RAG Proposal Generator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <style>
+    body { padding: 40px; background: #f8f9fa; }
+    .card { border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    #output { white-space: pre-wrap; background: #fff; padding: 15px; border-radius: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4 text-center">📄 RAG Proposal Generator</h1>
+
+    <!-- Upload Section -->
+    <div class="card mb-4 p-4">
+      <h4>1️⃣ Upload your documents</h4>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="files" id="files" multiple class="form-control mt-2 mb-3">
+        <button type="submit" class="btn btn-primary">Upload Files</button>
+      </form>
+      <div id="uploadStatus" class="mt-2 text-success"></div>
+    </div>
+
+    <!-- Prompt Section -->
+    <div class="card mb-4 p-4">
+      <h4>2️⃣ Enter your project prompt</h4>
+      <textarea id="prompt" class="form-control" rows="5" placeholder="Describe your proposal goal..."></textarea>
+    </div>
+
+    <!-- Template Section -->
+    <div class="card mb-4 p-4">
+      <h4>3️⃣ (Optional) Edit or create proposal template</h4>
+      <textarea id="template" class="form-control" rows="6">{{ user_prompt }}\n\n{{ rag_context }}</textarea>
+      <button class="btn btn-secondary mt-3" id="saveTemplate">Save Template</button>
+      <div id="templateStatus" class="mt-2 text-success"></div>
+    </div>
+
+    <!-- Generate Button -->
+    <div class="text-center">
+      <button id="generateBtn" class="btn btn-success btn-lg">🚀 Generate Proposal</button>
+    </div>
+
+    <!-- Output -->
+    <div class="card mt-4 p-4">
+      <h4>Generated Proposal</h4>
+      <div id="output">Your proposal will appear here...</div>
+    </div>
+  </div>
+
+  <script>
+  const uploadForm = document.getElementById("uploadForm");
+  const uploadStatus = document.getElementById("uploadStatus");
+  const templateBox = document.getElementById("template");
+  const outputDiv = document.getElementById("output");
+  const saveTemplateBtn = document.getElementById("saveTemplate");
+  const templateStatus = document.getElementById("templateStatus");
+
+  uploadForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(uploadForm);
+    uploadStatus.textContent = "Uploading...";
+    const res = await fetch("/upload", { method: "POST", body: formData });
+    const data = await res.json();
+    uploadStatus.textContent = "✅ Uploaded: " + data.uploaded.join(", ");
+  });
+
+  saveTemplateBtn.addEventListener("click", async () => {
+    const res = await fetch("/templates", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        name: "proposal_template.j2",
+        content: templateBox.value
+      })
+    });
+    const data = await res.json();
+    if (data.status === "ok") templateStatus.textContent = "✅ Template saved successfully!";
+  });
+
+  document.getElementById("generateBtn").addEventListener("click", async () => {
+    outputDiv.textContent = "⏳ Generating proposal, please wait...";
+    const prompt = document.getElementById("prompt").value;
+    const res = await fetch("/generate", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        prompt: prompt,
+        template: "proposal_template.j2",
+        top_k: 5
+      })
+    });
+    const data = await res.json();
+    outputDiv.textContent = data.generated || "⚠️ No output generated.";
+  });
+  </script>
+</body>
+</html>

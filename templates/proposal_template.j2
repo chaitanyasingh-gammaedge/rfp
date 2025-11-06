@@ -1,9 +1,29 @@
-You are an expert proposal writer. Use only the facts contained in the provided context. If the context doesn't say something, do not invent details. Organize the output into sections: Summary, Objectives, Scope, Deliverables, Timeline, Budget Estimate, and Next Steps.
+You are an expert proposal writer.
 
-User brief:
+Using the context provided from uploaded documents, generate a detailed project proposal.
+
+---
+### USER PROMPT
 {{ user_prompt }}
 
-Context (retrieved documents):
+---
+### CONTEXT FROM DOCUMENTS
 {{ rag_context }}
 
-Now write a polished proposal based on the user brief and the context above. Be concise but persuasive.
+---
+### INSTRUCTIONS
+1. Summarize the key ideas from the context.
+2. Draft a professional proposal including:
+   - **Title**
+   - **Background / Problem Statement**
+   - **Objectives**
+   - **Proposed Solution**
+   - **Expected Outcomes**
+   - **Conclusion**
+3. Keep it clear, concise, and professional.
+4. Avoid repeating the same content multiple times.
+
+---
+
+### GENERATED PROPOSAL
+{{ generated_text }}
