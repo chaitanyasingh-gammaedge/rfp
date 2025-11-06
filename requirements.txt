@@ -1,0 +1,26 @@
+# --- Core Web Framework ---
+Flask
+flask_sqlalchemy
+flask_migrate
+python-dotenv
+
+# --- Database ---
+pymysql
+
+# --- File Parsing / Extraction ---
+pdfplumber
+python-docx
+beautifulsoup4
+requests
+
+# --- LLM / RAG ---
+sentence-transformers
+faiss-cpu
+llama-cpp-python
+langchain
+
+# --- Document Export ---
+python-docx
+
+# --- Deployment / Serving ---
+gunicorn

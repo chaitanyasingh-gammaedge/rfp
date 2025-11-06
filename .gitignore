@@ -1,0 +1,19 @@
+# Ignore Python virtual environments
+.venv/
+venv/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment variables and local configs
+.env
+*.log
+
+# OS-specific
+.DS_Store
+
+# IDEs and editors
+.vscode/
+.idea/
